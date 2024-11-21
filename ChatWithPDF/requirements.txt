@@ -1,5 +1,6 @@
 langchain 
 langchain-community
+langchain_groq
 PyPDF2 
 streamlit 
 openai 
