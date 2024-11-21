@@ -2,11 +2,10 @@ import streamlit as st
 from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate, MessagesPlaceholder
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationChain
-from langchain.chat_models import ChatOpenAI
 from PyPDF2 import PdfReader
+from langchain_groq import ChatGroq # Assuming ChatGroq is available in langchain
 
-# Securely load Groq API key
-groq_api_key = st.secrets["GROQ_API_KEY"]  # Replace with your secure Groq API key
+groq_api_key = st.secrets["GROQ_API_KEY"] 
 
 # Sales coach prompt template
 system_prompt = """
@@ -126,8 +125,9 @@ def main():
                 # Reset conversation with the full context
                 prompt = create_prompt_with_context(st.session_state.context_text)
                 memory = ConversationBufferMemory(return_messages=True, memory_key="history")
+                llm = ChatGroq(api_key=groq_api_key,temperature=0.7, model_name="mixtral-8x7b-32768")
                 st.session_state.conversation = ConversationChain(
-                    llm=ChatOpenAI(api_key=groq_api_key, model_name="mixtral-8x7b-32768", temperature=0.7),
+                    llm=llm,
                     memory=memory,
                     prompt=prompt,
                     verbose=True
